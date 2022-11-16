@@ -34,14 +34,23 @@ function calculatePayout(song) {
 function printSong(song) {
   console.log("".concat(song.title, " - ").concat(song.artist));
 }
-var Mysong = {
+var mysong = {
   title: "Unchained Melody",
   artist: "Righteous Brothers",
-  numStreams: 1223849,
+  numStreams: 12873321,
   credits: {
     producer: "Phil Spector",
     writer: "Alex North",
   },
 };
-calculatePayout(Mysong);
-printSong(Mysong);
+// node로 확인하고 싶으면 변수로 바꿔서 console.log!
+var earnings = calculatePayout(mysong);
+console.log(earnings);
+printSong(mysong);
+
+// $ node objects.js
+// Thomas Jenkins
+// Mick Jagger
+// 42481.9593
+// Unchained Melody - Righteous Brothers
+

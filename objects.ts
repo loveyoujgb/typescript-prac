@@ -70,15 +70,78 @@ function printSong(song: Song): void {
   console.log(`${song.title} - ${song.artist}`);
 }
 
-const Mysong: Song = {
+const mysong: Song = {
   title: "Unchained Melody",
   artist: "Righteous Brothers",
-  numStreams: 1223849,
+  numStreams: 12873321,
   credits: {
     producer: "Phil Spector",
     writer: "Alex North",
   },
 };
 
-calculatePayout(Mysong);
-printSong(Mysong);
+// node로 확인하고 싶으면 변수로 바꿔서 console.log!
+const earnings = calculatePayout(mysong);
+console.log(earnings);
+printSong(mysong);
+
+
+/* -------------------------------- 선택적 프로퍼티 -------------------------------- */
+type PointA = {
+  x: number;
+  y: number;
+  z?: number
+};
+
+// ?를 넣으면 프로퍼티를 무조건 넣지 않아도 된다 ! (안넣어도 에러가 나지 않도록 선택적 프로퍼티를 설정할 수 있다)
+
+let pointA: PointA = { x: 34, y: 2 };
+// z를 안넣었는데도 에러가 나지 않는다
+
+/* ------------------------------ readonly 제어자 ------------------------------ */
+type User = {
+  readonly id: number;
+  username: string;
+};
+
+const user : User = {
+  id:12837,
+  username:"catgirl"
+}
+
+// user.id = 124523; ===> user.id값이 한번 할당된 후부터는 바꿀 수 없다. 읽기 전용이라고 에러가 뜬다.
+// 다만 readonly 이므로 원시값은 읽기 전용으로 에러가 뜨게 되고, 객체타입인 배열,객체와 같은 타입들은 수정이 가능하다.
+
+
+/* ---------------------------------- 교차 타입 --------------------------------- */
+type Circle = {
+  radius: number;
+}
+
+type Colorful = {
+  color:string;
+}
+
+type ColorfulCircle = Circle & Colorful;
+// 위의 두가지 타입을 다시 적지 않고, 한번에 두가지 타입을 적용시키고 싶을 때 사용한다.
+// 아래와 같이 적은 것이 된다.
+// type ColorfulCircle ={
+  //   radius:number;
+  //   color:string;
+  // }
+  
+  const happyFace: ColorfulCircle = {
+    radius:4,
+    color:"yellow",
+  }
+  
+  //아래와 같이 추가로 직접 타입을 추가할 수 있다.
+  type Test = Circle & Colorful &{
+    a:number;
+  };
+
+  const test:Test = {
+    radius:4,
+    color:"red",
+    a:3,
+  }

@@ -11,3 +11,6 @@ const juniper = {
     name: "Juniper",
     age: 1,
 };
+const test = (p) => {
+    console.log(p);
+};

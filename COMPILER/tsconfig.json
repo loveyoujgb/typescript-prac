@@ -40,7 +40,9 @@
 
     /* JavaScript Support */
     // "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
+    // 타입스크립트 프로그램 일부에 자바스크립트 파일을 사용할 수 있다.
     // "checkJs": true,                                  /* Enable error reporting in type-checked JavaScript files. */
+    // 타입스크립트가 오류를 보고해준다. 
     // "maxNodeModuleJsDepth": 1,                        /* Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'. */
 
     /* Emit */
@@ -48,10 +50,13 @@
     // "declarationMap": true,                           /* Create sourcemaps for d.ts files. */
     // "emitDeclarationOnly": true,                      /* Only output d.ts files and not JavaScript files. */
     // "sourceMap": true,                                /* Create source map files for emitted JavaScript files. */
+    // 타입스크립트에 소스맵의 생성 여부를 지시할 수 있다.
     // "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
-    // "outDir": "./",                                   /* Specify an output folder for all emitted files. */
+    "outDir": "./dist" /* Specify an output folder for all emitted files. */,
+    // 기본값 : "./"  out Directory 의 준말
     // "removeComments": true,                           /* Disable emitting comments. */
     // "noEmit": true,                                   /* Disable emitting files from a compilation. */
+    // true로 설정하면 파일을 컴파일하지 않게 된다. 타입 검사는 해주지만 js파일은 만들어주지 않도록 해준다.
     // "importHelpers": true,                            /* Allow importing helper functions from tslib once per project, instead of including them per-file. */
     // "importsNotUsedAsValues": "remove",               /* Specify emit/checking behavior for imports that are only used for types. */
     // "downlevelIteration": true,                       /* Emit more compliant, but verbose and less performant JavaScript for iteration. */
@@ -64,6 +69,7 @@
     // "stripInternal": true,                            /* Disable emitting declarations that have '@internal' in their JSDoc comments. */
     // "noEmitHelpers": true,                            /* Disable generating custom helper functions like '__extends' in compiled output. */
     // "noEmitOnError": true,                            /* Disable emitting files if any type checking errors are reported. */
+    // 타입스크립트 파일이 오류가 없는 경우에만 컴파일 하여 js파일 생성 및 업뎃 해준다.
     // "preserveConstEnums": true,                       /* Disable erasing 'const enum' declarations in generated code. */
     // "declarationDir": "./",                           /* Specify the output directory for generated declaration files. */
     // "preserveValueImports": true,                     /* Preserve unused imported values in the JavaScript output that would otherwise be removed. */
@@ -77,6 +83,8 @@
 
     /* Type Checking */
     "strict": true /* Enable all strict type-checking options. */,
+    // strick : true가 기본값이다.
+    // strick모드를 true로 설정하면 아래의 몇가지 옵션을 true로 한 것과 동일한 효과를 가진다. (포함하고 있음)
     // "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
     // "strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
     // "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
@@ -126,3 +134,22 @@
 //tsconfig.json 파일과 같은 위치에 있는 ts파일들을 일일이 컴파일(tsc 파일명.ts)코드를 치지 않아도 된다.
 //tsc 만 치면 ts파일들은 모두 자바스크립트로 컴파일되어 js파일에 업데이트된다.
 //동일하게 tsc -w만 쳐도 모든 ts파일이(tsconfig.json과 같은 위치에 있는) 컴파일 된다.
+
+/* -------------------------- 자바스크립트 컴파일 폴더 - dist -------------------------- */
+// 타입스크립트 파일은 src에 , 자바스크립트로 컴파일된 파일은 dist라는 폴더에 넣는 것이 통상적이다.
+// outDir(out Directory): 옵션이다.
+// 기본값 : "./" 경로설정! -> "./dist"로 하면 dist폴더에 들어간다.
+
+/* ---------------------- 컴파일 되는 javascript 의 버전 제어 옵션 ---------------------- */
+// "target" 옵션
+// 기본값 : ES3 이라고 하는데 es2016으로 되어있다.. 사이트에서도 ES3라고 써있는데 의문입니다^^..
+// var 나 화살표함수 같은 것들이 대표적!
+
+/* -------------------------------- strick 옵션 ------------------------------- */
+// 엄격한 타입 검사 모드 => 최종 결과의 정확도를 높여준다. 
+
+/* ---------------------------- noImplicitAny 옵션 ---------------------------- */
+// true 로 설정하면 암시적 any타입을 가질 때 에러를 일으킨다. (다만, strick모드가 true일 때도 에러가 나기는 함.)
+
+/* --------------------------- strictNullChecks옵션 --------------------------- */
+

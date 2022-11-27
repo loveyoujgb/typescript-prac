@@ -150,7 +150,7 @@ const jacket1 = new Jacket("Prada", "black");
 // }
 // 하지만 abstract클래스를 사용하게 되는 경우 그 안에 있는 기능(greet 같은..)과 값(first..)에 접근할 수 있다.
 // Employee 를 설명하는 요소가 많은 것이다.
-// 참고로* 확장할 abstract 클래스와 인터페이스는 동시에 구현이 가능하다. 양자택일이 아니다. 
+// 참고로* 확장할 abstract 클래스와 인터페이스는 동시에 구현이 가능하다. 양자택일이 아니다.
 class Employee {
     constructor(first, last) {
         this.first = first;
@@ -185,3 +185,71 @@ const betty = new FullTimeEmployee("Betty", "White", 95000);
 console.log(betty.getPay());
 const bill = new PartTimeEmployee("Bill", "Billerson", 24, 1100);
 console.log(bill.getPay());
+/* ----------------------------------- 제네릭 ---------------------------------- */
+// 제네릭은 여러 타입에서 사용할 수 있는 재사용 함수나 재사용 클래스를 정의할 수 있게 해주는 특수 구문이다.
+// dothing이 숫자 또는 문자열을 허용하지만 제네릭은 모든 타입을 허용하고 그 타입이 무엇이든 동일한 타입을 반환하게 만들 수 있다.
+// 아래 함수는 :number|string를 반환한다고 말할 수 있다.(둘중하나~)
+// 하지만, 제네릭 함수를 작성하게 되면 // 타입[1]를 주면 타입[1]를 반환하는 함수가 된다.
+// function doThing(thing:number|string):number|string{
+// 아래를 보면, 이것이 숫자의 배열임을 알 수 있다
+//const nums: number[] =[];
+// Array라는 인터페이스 <>안에는 타입명
+const nums = []; // 숫자롤 된 배열타입 반환
+const colors = ["234"]; // 문자열로 된 배열타입 반환
+/* --------------------------- 제네릭 - querySelector -------------------------- */
+//타입스크립트는 inputEl을 Element | null 타입으로 추측한다. HTMLInputElement와 비슷한 타입들이 많지만
+// querySelector는 어떤 Element인지는 모름.
+// const inputEl = document.querySelector("#username")
+// console.log(inputEl) //<input id="username" type="text" placeholder="username">
+// console.dir(inputEl) //inputEl의 전체 객체를 확인해보자
+// inputEl.value = "Hacked" //'Element' 형식에 'value' 속성이 없다고 인식한다. HTMLInput요소인지 알려줘야 한다.
+// 또한 null일 수 있으므로 error!
+//<>에 타입을 넣어 HTMLInputElement임을 알려준다.
+const inputEl = document.querySelector("#username");
+inputEl.value = "Hacked"; //null일 수 있으므로 !를 붙여서 null은 확실히 아니라고 알려준다.
+// =>querySelector는 제네릭 함수로 특정 타입을 받는다.
+// button
+const btn = document.querySelector(".btn");
+/* ------------------------------- 제네릭 함수 만들기 ------------------------------- */
+function numberIdentity(item) {
+    return item;
+}
+function stringIdentity(item) {
+    return item;
+}
+function booleanIdentity(item) {
+    return item;
+}
+// identity 이라고 하는 제네릭 함수이며 'Type(참조명)' 타입을 입력할 수 있는 제네릭 함수라는 뜻.
+function identity(item) {
+    return item;
+}
+// 입력 타입에 따라 그 타입으로 반환한다. 
+identity(7); //function identity<number>(item: number): number
+// identity<string>(7) //'number' 형식의 인수는 'string' 형식의 매개 변수에 할당될 수 없습니다.
+// 인터페이스를 넣어도 동일하다. 해당 인터페이스를 넣고 반환하는 함수만 허용!
+// identity<Cat>({}) // function identity<Cat>(item: Cat): Cat
+function getRandomElement(list) {
+    const randIdx = Math.floor(Math.random() * list.length); //랜덤 index 
+    return list[randIdx];
+}
+console.log(getRandomElement(["a", "b", "c"])); //함수를 돌릴 때 마다 랜덤으로 배열 내의 문자열 반환
+getRandomElement([23, 5235, 6, 3, 42, 646, 235]); //function getRandomElement<number>(list: number[]): number
+// 추론된 제네릭 타입 파라미터, 
+// 타입스크립트에서 제네릭 함수의 파라미터(인수)를 보고 어떤 타입을 받고 반환하는지 추론한다.
+// 단, 모든 제네릭 함수에 적용되는 것은 아님!! 
+// - getElementById 나 querySelector 같은 함수들은 인수만 보고는 타입을 추론할 수 없다. 인수는 내용물이 아닌 알려주는 용도로 쓰이고 있을것이므로
+// function getRandomElement<string>(list: string[]): string !!!
+getRandomElement(["a", "b", "c"]);
+/* ------------------------------ 여러 타입을 가진 제네릭 ----------------------------- */
+// T U V 
+// i j k 와 같은 관례
+// 반환하는 타입을 적지 않아도 된다. 반환 타입은 T와 U의 교차타입이라는 것을 추론할 것이다.(: T & U)
+function merge(object1, object2) {
+    return Object.assign(Object.assign({}, object1), object2);
+}
+//아래와 같이 적지 않아도 된다. 
+// merge<{name:string},{pets:string[]}>({name:"colt"},{pets:["blue",'elton']}) 
+// 첫번째와 두번째가 각각 T U 타입인 것을 알기 때문
+const comboObj = merge({ name: 'colt' }, { pets: ["blue", 'elton'] });
+console.log(merge({ name: 'colt' }, { pets: ["blue", 'elton'] }));

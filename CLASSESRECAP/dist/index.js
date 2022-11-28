@@ -224,32 +224,158 @@ function booleanIdentity(item) {
 function identity(item) {
     return item;
 }
-// 입력 타입에 따라 그 타입으로 반환한다. 
+// 입력 타입에 따라 그 타입으로 반환한다.
 identity(7); //function identity<number>(item: number): number
 // identity<string>(7) //'number' 형식의 인수는 'string' 형식의 매개 변수에 할당될 수 없습니다.
 // 인터페이스를 넣어도 동일하다. 해당 인터페이스를 넣고 반환하는 함수만 허용!
 // identity<Cat>({}) // function identity<Cat>(item: Cat): Cat
 function getRandomElement(list) {
-    const randIdx = Math.floor(Math.random() * list.length); //랜덤 index 
+    const randIdx = Math.floor(Math.random() * list.length); //랜덤 index
     return list[randIdx];
 }
 console.log(getRandomElement(["a", "b", "c"])); //함수를 돌릴 때 마다 랜덤으로 배열 내의 문자열 반환
 getRandomElement([23, 5235, 6, 3, 42, 646, 235]); //function getRandomElement<number>(list: number[]): number
-// 추론된 제네릭 타입 파라미터, 
+// 추론된 제네릭 타입 파라미터,
 // 타입스크립트에서 제네릭 함수의 파라미터(인수)를 보고 어떤 타입을 받고 반환하는지 추론한다.
-// 단, 모든 제네릭 함수에 적용되는 것은 아님!! 
+// 단, 모든 제네릭 함수에 적용되는 것은 아님!!
 // - getElementById 나 querySelector 같은 함수들은 인수만 보고는 타입을 추론할 수 없다. 인수는 내용물이 아닌 알려주는 용도로 쓰이고 있을것이므로
 // function getRandomElement<string>(list: string[]): string !!!
 getRandomElement(["a", "b", "c"]);
 /* ------------------------------ 여러 타입을 가진 제네릭 ----------------------------- */
-// T U V 
+// T U V
 // i j k 와 같은 관례
 // 반환하는 타입을 적지 않아도 된다. 반환 타입은 T와 U의 교차타입이라는 것을 추론할 것이다.(: T & U)
+// function merge<T,U>(object1:T, object2:U){
+// return {
+//   ...object1,
+//   ...object2
+// }
+// }
+//아래와 같이 적지 않아도 된다.
+// merge<{name:string},{pets:string[]}>({name:"colt"},{pets:["blue",'elton']})
+// 첫번째와 두번째가 각각 T U 타입인 것을 알기 때문
+// const comboObj = merge({name:'colt'},{pets:["blue",'elton']})
+// console.log(merge({name:'colt'},{pets:["blue",'elton']}));
+/* ------------------------------- 제네릭 - 타입 제한 추가하기 ------------------------------- */
+// function merge<T,U>(object1:T, object2:U){
+//   return {
+//     ...object1,
+//     ...object2
+//   }
+// }
+// console.log(merge({name:'Colt'},9)) // T와 U는 어떤 타입이든지 받아들인다. 에러없이 {name:'Colt'} 객체만 받아들여진다.
+// 이 때 타입 제한을 추가한다.
+// extends를 넣어서 객체(object)타입으로 확장해보자
 function merge(object1, object2) {
     return Object.assign(Object.assign({}, object1), object2);
 }
-//아래와 같이 적지 않아도 된다. 
-// merge<{name:string},{pets:string[]}>({name:"colt"},{pets:["blue",'elton']}) 
-// 첫번째와 두번째가 각각 T U 타입인 것을 알기 때문
-const comboObj = merge({ name: 'colt' }, { pets: ["blue", 'elton'] });
-console.log(merge({ name: 'colt' }, { pets: ["blue", 'elton'] }));
+function printDoubleLength(thing) {
+    return thing.length * 2;
+    // thing에 length 속성이 있는지 알 수 없으므로 T뒤에 extends Lengthy를 작성해서 에러해결
+}
+// 어떤 타입이든간에 Length 인터페이스 규칙을 따라야만 한다.
+printDoubleLength("23ㅇㄴㄹ");
+// printDoubleLength(235325); // 'number' 형식의 인수는 'Lengthy' 형식의 매개 변수에 할당될 수 없습니다.
+//다만.. 위의 예시는 적절한 제네릭 함수는 아니다^. 아래와 같이 그냥 함수로 하는게 더 깔끔한 예시이기는 하다...
+function printDoubleLength2(thing) {
+    return thing.length * 2;
+    // thing에 length 속성이 있는지 알 수 없으므로 T뒤에 extends Lengthy를 작성해서 에러해결
+}
+/* ------------------------------- 제네릭 - 기본 타입 파라미터 ------------------------------- */
+function makeEmptyArray() {
+    return [];
+}
+const strings = makeEmptyArray(); // function makeEmptyArray<string>(): string[]
+//<>을 아무것도 적지 않는다면? unknown으로 지정된다.
+const strings2 = makeEmptyArray(); // function makeEmptyArray<unknown>(): unknown[]
+//기본 값을 지정하는 방법!
+//T 뒤에 = number로 기본 값을 적어준다.
+function makeEmptyArray3() {
+    return [];
+}
+// <> 타입을 적지 않은 경우에만! 기본값이 들어간다.
+const strings3 = makeEmptyArray3(); // function makeEmptyArray3<number>(): number[]
+// class VideoPlaylist {
+//   public videos: Video[] = [];
+// }
+// class SongPlaylist {
+//   public song: Song[] = [];
+// }
+//위의 두가지 클래스를 제네릭으로 바꾸면 아래처럼 가능하다.
+class Playlist {
+    constructor() {
+        this.queue = [];
+    }
+    add(el) {
+        this.queue.push(el);
+    }
+}
+//<>에 인터페이스를 넣음으로써 각각의 인수가 Song, Video여야 되는 인터페이스가 생성된다..
+const songs = new Playlist();
+// songs.add() // (method) Playlist<Song>.add(el: Song): void
+const videos = new Playlist();
+// videos.add() // (method) Playlist<Video>.add(el: Video): void
+//제네릭 끝.
+/* --------------------------------- 타입 좁히기 - Typeof 가드--------------------------------- */
+function triple(value) {
+    // 값을 3번 연속되게 하고 싶다고 가정해보자.
+    // 타입에 따라 다른 메서드가 들어가야 하기 때문에 에러가 난다.
+    // value.repeat(3)
+    // value * 3
+    if (typeof value === "string") {
+        return value.repeat(3);
+    }
+    return value * 3;
+}
+/* --------------------------------- 타입 좁히기 - Truthiness 가드--------------------------------- */
+// if문을 통해 truthy 인지 falsy 인지 확인하는 타입 좁히기.
+// 예시1
+const el = document.getElementById("idk"); // HTMLElement | null
+if (el) {
+    // if문을 통해 truthy한 값으로 인지함. => HTMLElement 요소일 경우가 된다.
+    el;
+}
+else {
+    el; // null 이어야만 한다.
+}
+// 예시2
+const printLetters = (word) => {
+    if (word) {
+        for (let char of word) {
+            //word: string
+            //문자열인 경우가 된다.
+            console.log(char);
+        }
+        console.log(word);
+    }
+    else {
+        console.log("YOU DID NOT PASS IN A WORD!");
+        console.log(word); // word: string | undefined => if문에서 반드시 문자열! 이라고 단정짓고 있는 것은 아니므로
+        // 빈 문자열은 falsy한 값
+    }
+};
+/* ---------------------------- Equality (동등) 좁히기 --------------------------- */
+function someDemo(x, y) {
+    if (x === y) {
+        x; //:stting
+        y; //:string
+        // ===를 통해 타입까지 알맞아야만 한다.
+    }
+    // ==으로 하는 경우? 정확하지 않음.
+    // if(x == y){
+    //   return x.toUpperCase();
+    // }
+}
+// ==으로 하는 경우?
+// someDemo(3,"3"); // 타입스크립트가 에러를 찾지 못한다. 자바스크립트에서 TypeError 가 난다.
+/* ------------------------------ in연산자로 타입 좁히기 ----------------------------- */
+const pet = { name: "Kitty", age: 20 };
+function getRuntime(media) {
+    if ("numEpisodes" in media) {
+        // if문의 in연산자를 통해 media: TVShow 타입으로 좁혀진다.
+        return media.numEpisodes * media.episodeDuration;
+    }
+    return media.duration; // media: Movie
+}
+console.log(getRuntime({ title: "Amadeus", duration: 140 }));
+console.log(getRuntime({ title: "Spongebob", numEpisodes: 80, episodeDuration: 30 }));

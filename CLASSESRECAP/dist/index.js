@@ -379,3 +379,100 @@ function getRuntime(media) {
 }
 console.log(getRuntime({ title: "Amadeus", duration: 140 }));
 console.log(getRuntime({ title: "Spongebob", numEpisodes: 80, episodeDuration: 30 }));
+/* ---------------------------- instanceof 타입 좁히기 --------------------------- */
+// '테스트할 개체' instanceof '테스트할 생성자' => boolean
+// 생성자의 속성이 개체의 프로토타입 체인에 나타나는지 확인하는 메서드이다.
+// 쉽게 말해서 이것이 어떤 클래스에서(혹은 Date, 일반 문자열 등등) 인스턴스화 되었는지 확인하는 것
+function printFullDate(date) {
+    if (date instanceof Date) {
+        console.log(date.toUTCString()); // date: Date
+    }
+    else {
+        console.log(new Date(date).toUTCString()); //date: string
+    }
+}
+class User {
+    constructor(username) {
+        this.username = username;
+    }
+}
+class Company {
+    constructor(name) {
+        this.name = name;
+    }
+}
+function printName(entity) {
+    // if("username" in entity) => entity:User가 될 것,
+    // 만약 둘다 name 이라는 같은 값이 들어있다면 instanceof를 사용할 수 밖에 없다.
+    if (entity instanceof User) {
+        entity;
+    }
+    else {
+        entity; // entity: Company
+    }
+}
+//(animal as Cat)를 통해 animal이 Cat임을 단언한다.
+// function isCat(animal: Cat | Dog) {
+//   return (animal as Cat).numLives !== undefined; //true or false 다만, 타입을 좁힌것은 아님
+// }
+// function makeNoise(animal: Cat | Dog): string {
+//   if(isCat(animal)){ // isCat이라는 함수는 true, false를 확인할 뿐 타입 좁히기는 안됨
+//     animal //animal: Cat | Dog
+//     return "Meow";
+//   }
+// }
+// 위와 같은 때에 사용한다.
+function isCat(animal) {
+    //: animal is Cat 추가
+    return animal.numLives !== undefined;
+}
+// : animal is Cat 를 추가함으로써 isCat이라는 함수가 Cat 타입인지에 대해 타입스크립트가
+// 명확하게 알 수 있게 된다.
+function makeNoise(animal) {
+    if (isCat(animal)) {
+        animal; // animal: Cat  Cat임을 알게 된다.
+        return "Meow";
+    }
+    else
+        return "";
+}
+// switch문에서 case (리터럴) 을 통해서 구분할 수 있다.
+// 다만 인터페이스에서 리터럴을 사용할 때 가능하다.
+function getFarmAnimalSound(animal) {
+    switch (animal.kind) {
+        case "pig":
+            return "Oink!";
+        case "cow":
+            return "Mooo!";
+        case "rooster":
+            return "Cockadoodledoo";
+    }
+}
+const stevie = {
+    name: "Stevie Chicks",
+    weight: 2,
+    age: 1.5,
+    kind: "rooster", // Rooster의 kind값 리터럴이 "rooster"이므로 이것도 동일해야만 한다.
+};
+console.log(getFarmAnimalSound(stevie)); // Cockadoodledoo
+function getFarmAnimalSound2(animal) {
+    switch (animal.kind) {
+        case "pig":
+            return "Oink!";
+        case "cow":
+            return "Mooo!";
+        case "rooster":
+            return "Cockadoodledoo";
+        case "sheep":
+            return "Baaa";
+        default:
+            // 정확하게 처리된다면 위에서 다 해결 됫 것이다. 만약 제대로 이루어지지 않을 떄
+            // 디폴트를 통해 걸러지게 할 수 있다. 
+            // never 타입에 animal을 할당하여 error!! 발생시킨다.
+            // 예를들어 sheep case를 처리하지 않으면 아직 덜 처리한 case가 있다고 에러가 난다.
+            const _exhaustiveCheck = animal; // 이 코드가 에러가 나게 되면서 개발자가 알게된다.
+            // 코드는 유지한 상태로 에러가 날 때 타입스크립트를 통해 알게되는 것이다.
+            // (타입을 추가하고 처리를 잊을 떄, 에러타입 처리 확실히 해야되는 상황에서 필요하다)
+            return _exhaustiveCheck;
+    }
+}

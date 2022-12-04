@@ -83,3 +83,20 @@ function printUser(user: User) {
   console.log(user.email);
   console.log(user.phone);
 }
+
+/* --------------------------------- 타입 개별설치 -------------------------------- */
+
+// import _ from "lodash" //모듈 'lodash'에 대한 선언 파일을 찾을 수 없습니다.
+// 타입스크립트 공식문서에 보면 타입선언에 대한 정보를 다운할 수 있는 방법을 알려주고 있다.
+// npm install --save-dev @types/lodash
+// https://github.com/DefinitelyTyped/DefinitelyTyped
+// 많이 쓰이는 라이브러리들의 타입선언이 들어있는 깃헙 레포
+
+import _ from "lodash"; // 에러가 사라졌다.
+
+// _.partition 메서드를 사용한 후 타입설명을 확인할 수 있게 된다
+
+/* --------------------------------- 네임스페이스 --------------------------------- */
+// 일부 타입스크립트 타입선언 파일에서 namespace를 발견할 수 있다.
+// 타입스크립트에서 코드를 구성하는 오래된 방식이다. 현재는 거의 사용할 일이 없어지고 있다.
+

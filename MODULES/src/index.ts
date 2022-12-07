@@ -30,9 +30,18 @@
 // 그 다음 lite server를 설치하고 스크립트 시작 시에 라이트서버가 실행되도록 세팅한다.
 // 브라우저에서 모듈 구문을 사용하려면 거쳐야 하는 절차!
 // 이 코드를 어디에 작성하든 ES모듈 구문을 이해시키도록 하는 것이다.
-import { sample, add } from "./utils.js";
-sample([12, 3, 4]);
-console.log(sample([12, 3, 4]));
+import User from "./User.js"; // default 를 사용한 export는 기본 내보내기를 위한 컨테이너처럼 작동한다 .
+import { sample as randomSample, add, pi } from "./utils.js"; // { 중괄호 }로 감싸서 import해야한다.
+// sample 변수가 두개인 경우 에러가 난다. 이 경우 as를 통해 다른 이름으로 가져온다  
+import {userHelper} from "./User.js";
+randomSample([12, 3, 4]);
+console.log(randomSample([12, 3, 4]));
 add(423, 153);
 console.log(add(423, 153));
 //작동!
+
+console.log(pi);
+console.log(User);
+console.log(userHelper)
+
+const sample = 123;
